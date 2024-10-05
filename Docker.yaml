@@ -1,0 +1,35 @@
+version: '3.8'
+
+services:
+  web:
+    depends_on:
+      - db
+    build: ./app
+    ports:
+      - "5010:5000"
+    environment:
+      HOST: db              # Host is the service name 'db'
+      DB: test_db            # Database name
+      UNAME: postgres        # Username for PostgreSQL
+      PASS: password         # Password for PostgreSQL
+    volumes:
+      - ./app:/app
+    networks:
+      - app-network
+
+  db:
+    image: postgres
+    environment:
+      POSTGRES_DB: test_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    networks:
+      - app-network
+
+volumes:
+  db_data:
+
+networks:
+  app-network:
